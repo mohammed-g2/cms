@@ -1,0 +1,11 @@
+venv/
+
+__pychache__/
+*.pyc
+
+.vscode/
+vendor/
+
+*.sqlite
+.env
+notes.txt
