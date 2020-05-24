@@ -3,9 +3,9 @@ from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from app import db
 from app.models import User
-from app.util import send_email
+from app.util import send_email, flash_form_errors
 from . import user
-from .forms import ChangePasswordForm, ChangeEmailForm
+from .forms import ChangePasswordForm, ChangeEmailForm, EditInfoForm
 
 
 @user.route('/profile/<username>')
@@ -21,48 +21,62 @@ def profile(username):
 @login_required
 def edit_account():
     change_password_form = ChangePasswordForm()
+    
     change_email_form = ChangeEmailForm()
     change_email_form.email.data = current_user.email
+    
+    edit_info_form = EditInfoForm()
+    edit_info_form.name.data = current_user.name
+    edit_info_form.location.data = current_user.location
+    edit_info_form.about_me.data = current_user.about_me
+    
     return render_template('user/edit-account.html', 
-        change_password_form=change_password_form, change_email_form=change_email_form)
+        change_password_form=change_password_form, change_email_form=change_email_form,
+        edit_info_form=edit_info_form)
+
+
+@user.route('/edit-account-info', methods=['POST'])
+@login_required
+def edit_account_info():
+    form = EditInfoForm(request.form)
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.location = form.location.data
+        current_user.about_me = form.about_me.data
+
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+    flash('your profile has been updated')
+    flash_form_errors(form)
+    return redirect(url_for('user.profile', username=current_user.username))
 
 
 @user.route('/change-password', methods=['POST'])
 @login_required
 def change_password():
-    password = request.form.get('password')
-    repeat_password = request.form.get('repeat_passsword')
-    if password and len(password) >= 6:
-        if password == repeat_password:
-            current_user.password = password
-            db.session.add(current_user)
-            db.session.commit()
-            flash('password has been changed')
-        else:
-            flash('unmatched password')
-    else:
-        flash('password can not be less than 6 characters long')
+    form = ChangePasswordForm(request.form)
+    if form.validate_on_submit():
+        current_user.password = form.password.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+        flash('password has been changed')
+    
+    flash_form_errors(form)
     return redirect(url_for('user.edit_account'))
     
 
 @user.route('/change-email', methods=['POST'])
 @login_required
 def change_email_request():
-    try:
-        email = validate_email(request.form.get('email')).email
-    except EmailNotValidError:
-        flash('invalid email')
-        return redirect(url_for('user.edit_account'))
-    
-    if User.query.filter_by(email=email).first() == None:
-        token = current_user.generate_token(email=email)
+    form = ChangeEmailForm(request.form)
+    if form.validate_on_submit():
+        token = current_user.generate_token(email=form.email.data)
         send_email([current_user.email],
         'change email address',
         'user/email/change-email',
         token=token, user=user)
         flash('a message has been sent to your email to confirm the changes')
-    else:
-        flash('please use another email')
+    flash_form_errors(form)
     return redirect(url_for('user.edit_account'))
 
 
@@ -70,11 +84,13 @@ def change_email_request():
 @login_required
 def change_email(token):
     email = User.decode_token(token).get('email')
+    if User.query.filter_by(email=email).first():
+        abort(403)
     if not email:
         flash('request expired')
     else:
         current_user.email = email
-        db.session.add(current_user)
+        db.session.add(current_user._get_current_object())
         db.session.commit()
         flash('email has been changed')
     return redirect(url_for('main.index'))
