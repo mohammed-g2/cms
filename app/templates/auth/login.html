@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+<h1>Login</h1>
+<form action="" method="POST">
+    {{ form.csrf_token }}
+
+    {{ form.email.label }}
+    {{ form.email }}
+
+    {{ form.password.label }}
+    {{ form.password }}
+
+    {{ form.remember_me }}
+    {{ form.remember_me.label }}
+
+    {{ form.submit }}
+</form>
+<p><a href="{{ url_for('auth.reset_password_request') }}">forgot password? click here</a></p>
+{% endblock %}

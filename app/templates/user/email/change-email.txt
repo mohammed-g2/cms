@@ -1,0 +1,3 @@
+Dear {{ user.username }}
+to confirm changing you email please visit the following link
+{{ url_for('user.change_email', _external=True, token=token) }}

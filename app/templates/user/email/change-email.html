@@ -1,0 +1,5 @@
+<p>Dear {{ user.username }}</p>
+<p>
+    to confirm changing you email please visit the following 
+    <a href="{{ url_for('user.change_email', _external=True, token=token) }}">link</a>
+</p>
