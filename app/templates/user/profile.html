@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block body %}
+<div>
+    <h1>{{ user.username }}</h1>
+    <div>
+        {% if user.name %}<p>{{ user.name }}</p>{% endif %}
+        {% if user.location %}<p>{{ user.location }}</p>{% endif %}
+        {% if current_user.is_admin() %}
+            <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+        {% endif %}
+        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+        <p>member since <span class="time">{{ user.member_since }}</span></p>
+        <p>last seen <span class="time">{{ user.last_seen }}</span></p>
+    </div>
+    
+</div>
+{% endblock %}

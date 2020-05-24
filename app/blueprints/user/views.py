@@ -1,11 +1,20 @@
 from email_validator import validate_email, EmailNotValidError
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from app import db
 from app.models import User
 from app.util import send_email
 from . import user
 from .forms import ChangePasswordForm, ChangeEmailForm
+
+
+@user.route('/profile/<username>')
+@login_required
+def profile(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        abort(404)
+    return render_template('user/profile.html', user=user)
 
 
 @user.route('/edit-account', methods=['GET', 'POST'])
