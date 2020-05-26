@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "partials/macros.html" as macros %}
 
 {% block title %}posts{% endblock %}
 
@@ -20,5 +21,9 @@
     <div>
         <h1>Posts</h1>
         {% include "partials/_posts.html" %}
+    </div>
+
+    <div>
+        {{ macros.pagination(pagination, 'main.posts') }}
     </div>
 {% endblock %}

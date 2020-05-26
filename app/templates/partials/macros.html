@@ -1,0 +1,38 @@
+{% macro pagination(pagination, endpoint) %}
+    <div>
+        {# first page #}
+        <a href="{{ url_for(endpoint, page=1, **kwargs) }}">first</a>
+
+        {# previous page #}
+        {% if pagination.has_prev %}
+            <a href="{{ url_for(endpoint, page=pagination.page-1, **kwargs) }}">prev</a>
+        {% else %}
+            <span>prev</span>
+        {% endif %}
+
+        {# list of pages #}
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page == pagination.page %}
+                    <a href="{{ url_for(endpoint, page=page, **kwargs) }}" style="color:red">
+                        {{ page }}
+                    </a>
+                {% else %}
+                    <a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a>
+                {% endif %}
+            {% else %}
+                <a>&hellip;</a>
+            {% endif%}
+        {% endfor %}
+
+        {# next page #}
+        {% if pagination.has_next %}
+            <a href="{{ url_for(endpoint, page=pagination.page+1, **kwargs) }}">next</a>
+        {% else %}
+            <span>next</span>
+        {% endif %}
+
+        {# last page #}
+        <a href="{{ url_for(endpoint, page=pagination.pages, **kwargs) }}">last</a>
+    </div>
+{% endmacro %}

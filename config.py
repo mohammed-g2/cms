@@ -11,6 +11,7 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SUBJECT_PREFIX = '[Blog]'
     ADMIN = os.environ.get('ADMIN') or 'admin@email.com'
+    POSTS_PER_PAGE = 5
     
     @staticmethod
     def init_app(app):

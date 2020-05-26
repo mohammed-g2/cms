@@ -4,15 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+faker = "*"
 
 [packages]
 flask = "*"
-email-validator = "*"
 flask-login = "*"
 flask-mail = "*"
 flask-migrate = "*"
 flask-sqlalchemy = "*"
 flask-wtf = "*"
+email-validator = "*"
 python-dotenv = "*"
 
 [requires]

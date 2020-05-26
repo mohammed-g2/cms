@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% import "partials/macros.html" as macro %}
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
@@ -30,6 +30,10 @@
         {% else %}
             <p>no posts</p>
         {% endif %}
+    </div>
+
+    <div>
+        {{ macro.pagination(pagination, 'user.profile', username=user.username) }}
     </div>
     
 </div>

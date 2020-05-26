@@ -1,8 +1,8 @@
 {# require posts #}
 <div>
     {% for post in posts %}
-        <div>
-            <p>{{ post.title }}</p>
+        <div class="post">
+            <h4>{{ post.title }}</h4>
             <p>{{ post.body }}</p>
             <p>
                 <a href="{{ url_for('user.profile', username=post.author.username)}}">
@@ -10,7 +10,7 @@
                     {{ post.author.username }}
                 </a>
             </p>
-            <p>{{ post.timestamp }}</p>
+            <p class="time">{{ post.timestamp }}</p>
             {% if current_user.id == post.author_id or current_user.is_admin() %}
             <p>
                 <button><a href="{{ url_for('main.edit_post', id=post.id) }}">Edit</a></button>

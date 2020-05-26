@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_required, current_user
 from app import db
 from app.models import Permission, Post
@@ -23,9 +23,14 @@ def posts():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('main.posts'))
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    
+    page = request.args.get('page', 1, type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
+    )
+    posts = pagination.items
     flash_form_errors(form)
-    return render_template('main/posts.html', form=form, posts=posts)
+    return render_template('main/posts.html', form=form, posts=posts, pagination=pagination)
 
 
 @main.route('/edit-post/<id>', methods=['GET', 'POST'])
@@ -34,6 +39,7 @@ def posts():
 def edit_post(id):
     post = Post.query.get_or_404(id)
     form = PostForm(post)
+
     if form.validate_on_submit():
         post.body = form.body.data
         post.title = form.title.data
