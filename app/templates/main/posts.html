@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}posts{% endblock %}
+
+{% block body %}
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+
+        {{ form.body.label }}
+        {{ form.body }}
+
+        {{ form.submit }}
+    </form>
+{% endblock %}
