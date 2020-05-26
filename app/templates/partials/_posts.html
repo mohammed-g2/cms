@@ -4,6 +4,7 @@
         <div class="post">
             <h4>{{ post.title }}</h4>
             <p>{{ post.body }}</p>
+            <p><a class="post-link" href="{{ url_for('main.post', id=post.id)}}">continue reading...</a></p>
             <p>
                 <a href="{{ url_for('user.profile', username=post.author.username)}}">
                     <img src="{{ post.author.avatar(26) }}" alt="user avatar">

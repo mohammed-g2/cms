@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body %}
+    <h1>{{ post.title }}</h1>
+    {% if current_user.is_admin() or current_user == post.author %}
+        <button><a href="{{ url_for('main.edit_post', id=post.id)}}">Edit post</a></button>
+    {% endif %}
+    <p>author: 
+        <a href="{{ url_for('user.profile', username=post.author.username)}}">
+        {{ post.author.username }}
+        </a>
+    </p>
+    <p class="time">{{ post.timestamp }}</p>
+    <p>{{ post.body }}</p>
+{% endblock %}

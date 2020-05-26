@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, current_app
+from flask import render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_required, current_user
 from app import db
 from app.models import Permission, Post
@@ -33,11 +33,19 @@ def posts():
     return render_template('main/posts.html', form=form, posts=posts, pagination=pagination)
 
 
+@main.route('/post/<int:id>')
+def post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('main/post.html', post=post)
+
+
 @main.route('/edit-post/<id>', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.WRITE)
 def edit_post(id):
     post = Post.query.get_or_404(id)
+    if current_user != post.author and not current_user.can(Permission.ADMIN):
+        abort(403)
     form = PostForm(post)
 
     if form.validate_on_submit():
