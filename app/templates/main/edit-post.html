@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}edit post{% endblock %}
+
+{% block body %}
+    <h1>Edit post</h1>
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+
+        {{ form.title.label }}
+        {{ form.title }}
+
+        {{ form.body.label }}
+        {{ form.body }}
+        
+        {{ form.submit }}
+    </form>
+{% endblock %}

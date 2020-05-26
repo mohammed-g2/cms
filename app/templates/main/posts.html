@@ -3,12 +3,22 @@
 {% block title %}posts{% endblock %}
 
 {% block body %}
+    {% if current_user.can(Permission.WRITE) %}
     <form method="POST" action="">
         {{ form.csrf_token }}
 
         {{ form.body.label }}
         {{ form.body }}
 
+        {{ form.title.label }}
+        {{ form.title }}
+
         {{ form.submit }}
     </form>
+    {% endif %}
+
+    <div>
+        <h1>Posts</h1>
+        {% include "partials/_posts.html" %}
+    </div>
 {% endblock %}

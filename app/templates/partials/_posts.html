@@ -1,0 +1,21 @@
+{# require posts #}
+<div>
+    {% for post in posts %}
+        <div>
+            <p>{{ post.title }}</p>
+            <p>{{ post.body }}</p>
+            <p>
+                <a href="{{ url_for('user.profile', username=post.author.username)}}">
+                    <img src="{{ post.author.avatar(26) }}" alt="user avatar">
+                    {{ post.author.username }}
+                </a>
+            </p>
+            <p>{{ post.timestamp }}</p>
+            {% if current_user.id == post.author_id or current_user.is_admin() %}
+            <p>
+                <button><a href="{{ url_for('main.edit_post', id=post.id) }}">Edit</a></button>
+            </p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>

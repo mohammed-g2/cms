@@ -6,7 +6,9 @@
 <div>
     <h1>{{ user.username }}</h1>
     <img src="{{ user.avatar(size='256') }}" alt="user avatar">
-    <a href="{{ url_for('user.edit_account') }}"><button>edit account</button></a>
+    {% if current_user == user %}
+        <a href="{{ url_for('user.edit_account') }}"><button>edit account</button></a>
+    {% endif %}
     {% if current_user.is_admin() %}
         <a href="{{ url_for('admin.edit_user', id=user.id) }}"><button>edit account [Admin]</button></a>
     {% endif %}
@@ -19,6 +21,15 @@
         {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
         <p>member since <span class="time">{{ user.member_since }}</span></p>
         <p>last seen <span class="time">{{ user.last_seen }}</span></p>
+    </div>
+
+    <div>
+        <h3>Posts</h3>
+        {% if posts %}
+            {% include "partials/_posts.html" %}
+        {% else %}
+            <p>no posts</p>
+        {% endif %}
     </div>
     
 </div>
