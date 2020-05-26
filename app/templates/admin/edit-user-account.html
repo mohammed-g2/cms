@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit user - {{ user.username }}{% endblock %}
+
+{% block body %}
+<div>
+    <h3>Edit user {{ user.username }}</h3>
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+
+        {{ form.email.label }}
+        {{ form.email }}
+
+        {{ form.username.label }}
+        {{ form.username }}
+
+        {{ form.role.label }}
+        {{ form.role }}
+
+        {{ form.name.label }}
+        {{ form.name }}
+
+        {{ form.location.label }}
+        {{ form.location }}
+
+        {{ form.confirmed.label }}
+        {{ form.confirmed }}
+
+        {{ form.about_me.label }}
+        {{ form.about_me }}
+
+        {{ form.submit }}
+    </form>
+    
+</div>
+{% endblock %}

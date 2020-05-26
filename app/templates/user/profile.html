@@ -5,6 +5,11 @@
 {% block body %}
 <div>
     <h1>{{ user.username }}</h1>
+    <img src="{{ user.avatar(size='256') }}" alt="user avatar">
+    <a href="{{ url_for('user.edit_account') }}"><button>edit account</button></a>
+    {% if current_user.is_admin() %}
+        <a href="{{ url_for('admin.edit_user', id=user.id) }}"><button>edit account [Admin]</button></a>
+    {% endif %}
     <div>
         {% if user.name %}<p>{{ user.name }}</p>{% endif %}
         {% if user.location %}<p>{{ user.location }}</p>{% endif %}

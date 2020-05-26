@@ -83,14 +83,9 @@ def change_email_request():
 @user.route('/change-email/<token>')
 @login_required
 def change_email(token):
-    email = User.decode_token(token).get('email')
-    if User.query.filter_by(email=email).first():
-        abort(403)
-    if not email:
-        flash('request expired')
-    else:
-        current_user.email = email
-        db.session.add(current_user._get_current_object())
+    user_id = User.decode_token(token).get('user_id')
+    user = User.query.get_or_404(user_id)
+    if user.change_email(token):
         db.session.commit()
         flash('email has been changed')
     return redirect(url_for('main.index'))

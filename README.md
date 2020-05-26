@@ -1,1 +1,1 @@
-# CMS app
+# Blogging engine

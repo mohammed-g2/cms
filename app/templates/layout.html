@@ -17,7 +17,7 @@
             <li>
                 <a href="{{ url_for('user.profile', username=current_user.username) }}">Profile</a>
             </li>
-            <li><a href="{{ url_for('user.edit_account') }}">Edit account</a></li>
+            <li><img src="{{ user.avatar(size='32') }}" alt="user avatar"></li>
             <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.login') }}">Login</a></li>
