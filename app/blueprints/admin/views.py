@@ -1,8 +1,9 @@
-from flask import render_template, abort, flash, redirect, url_for
+from flask import render_template, abort, flash, redirect, url_for, request, current_app
 from flask_login import login_required
 from app import db
 from app.decorators import permission_required, admin_required
-from app.models import Permission, User
+from app.models import Permission, User, Comment
+from app.util import flash_form_errors
 from . import admin
 from .forms import EditAccountAdminForm
 
@@ -28,6 +29,7 @@ def edit_user(id):
         user.name = form.name.data
         user.location = form.location.data
         user.about_me = form.about_me.data
+        user.role_id = form.role.data
         db.session.add(user)
         db.session.commit()
         flash('profile has been updated')
@@ -39,5 +41,18 @@ def edit_user(id):
     form.name.data = user.name
     form.location.data = user.location
     form.about_me.data = user.about_me
-
+    form.role.data = user.role_id
+    flash_form_errors(form)
     return render_template('admin/edit-user-account.html', form=form, user=user)
+
+
+@admin.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE)
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(page=page, 
+        per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    comments = pagination.items
+    return render_template('admin/moderate-comments.html', pagination=pagination, 
+        comments=comments, endpoint='admin.moderate')

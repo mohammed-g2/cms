@@ -12,6 +12,7 @@
                 </a>
             </p>
             <p class="time">{{ post.timestamp }}</p>
+            <p>comments {{ post.comments.count() }}</p>
             {% if current_user.id == post.author_id or current_user.is_admin() %}
             <p>
                 <button><a href="{{ url_for('main.edit_post', id=post.id) }}">Edit</a></button>

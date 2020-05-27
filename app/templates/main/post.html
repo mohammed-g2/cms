@@ -29,6 +29,10 @@
         {% endif %}
 
         {% include "partials/_comments.html" %}
+
+        {% if comments %}
+            <div>{{ macro.pagination(pagination, endpoint, id=post.id) }}</div>
+        {% endif %}
     </div>
 
     

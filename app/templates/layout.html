@@ -20,6 +20,10 @@
             <li class="profile-img"><img src="{{ current_user.avatar(size='32') }}" alt="user avatar"></li>
             <li><a href="{{ url_for('main.posts') }}">Explore</a></li>
             <li><a href="{{ url_for('user.newsfeed') }}">Newsfeed</a></li>
+
+            {% if current_user.can(Permission.MODERATE) %}
+                <li><a href="{{ url_for('admin.moderate') }}">Moderate</a></li>
+            {% endif %}
             <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
         {% else %}
             <li><a href="{{ url_for('auth.login') }}">Login</a></li>

@@ -7,7 +7,8 @@
 - followers
 - user profile customization
 - user comments
-- adminstration: edit blogs / accounts
+- adminstration: edit / delete blogs, comments, accounts
+- moderation: moderate user comments
 
 #### command line:
 
