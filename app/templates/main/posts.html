@@ -1,29 +1,31 @@
 {% extends "layout.html" %}
 {% import "partials/macros.html" as macros %}
 
-{% block title %}posts{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    {% if current_user.can(Permission.WRITE) %}
-    <form method="POST" action="">
-        {{ form.csrf_token }}
+    {% if endpoint == 'main.posts' %}
+        {% if current_user.can(Permission.WRITE) %}
+            <form method="POST" action="">
+                {{ form.csrf_token }}
 
-        {{ form.body.label }}
-        {{ form.body }}
+                {{ form.body.label }}
+                {{ form.body }}
 
-        {{ form.title.label }}
-        {{ form.title }}
+                {{ form.title.label }}
+                {{ form.title }}
 
-        {{ form.submit }}
-    </form>
+                {{ form.submit }}
+            </form>
+        {% endif %}
     {% endif %}
 
     <div>
-        <h1>Posts</h1>
+        <h1>{{ title }}</h1>
         {% include "partials/_posts.html" %}
     </div>
 
     <div>
-        {{ macros.pagination(pagination, 'main.posts') }}
+        {{ macros.pagination(pagination, endpoint) }}
     </div>
 {% endblock %}

@@ -30,7 +30,8 @@ def posts():
     )
     posts = pagination.items
     flash_form_errors(form)
-    return render_template('main/posts.html', form=form, posts=posts, pagination=pagination)
+    return render_template('main/posts.html', form=form, posts=posts, pagination=pagination,
+        endpoint='main.posts', title='Posts')
 
 
 @main.route('/post/<int:id>')

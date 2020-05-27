@@ -6,11 +6,35 @@
 <div>
     <h1>{{ user.username }}</h1>
     <img src="{{ user.avatar(size='256') }}" alt="user avatar">
-    {% if current_user == user %}
-        <a href="{{ url_for('user.edit_account') }}"><button>edit account</button></a>
+    <div>
+        {% if current_user == user %}
+            <a href="{{ url_for('user.edit_account') }}"><button>edit account</button></a>
+        {% endif %}
+        {% if current_user.is_admin() %}
+            <a href="{{ url_for('admin.edit_user', id=user.id) }}"><button>edit account [Admin]</button></a>
+        {% endif %}
+    </div>
+    
+    <p>
+    {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+        {% if not current_user.is_following(user) %}
+            <a href="{{ url_for('user.follow', username=user.username) }}">Follow</a>
+        {% else %}
+            <a href="{{ url_for('user.unfollow', username=user.username) }}">Unfollow</a>
+        {% endif %}
     {% endif %}
-    {% if current_user.is_admin() %}
-        <a href="{{ url_for('admin.edit_user', id=user.id) }}"><button>edit account [Admin]</button></a>
+    </p>
+    
+    <a href="{{ url_for('user.followers', username=user.username) }}">
+        Followers: {{ user.followers.count() }}
+    </a>
+    <br>
+    <a href="{{ url_for('user.followed_by', username=user.username)}}">
+        Following: {{ user.followed.count() }}
+    </a>
+
+    {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
+        <p>Follows you</p>
     {% endif %}
     <div>
         {% if user.name %}<p>{{ user.name }}</p>{% endif %}

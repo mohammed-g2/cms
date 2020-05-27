@@ -12,6 +12,7 @@ class Config():
     MAIL_SUBJECT_PREFIX = '[Blog]'
     ADMIN = os.environ.get('ADMIN') or 'admin@email.com'
     POSTS_PER_PAGE = 5
+    FOLLOWERS_PER_PAGE = 10
     
     @staticmethod
     def init_app(app):

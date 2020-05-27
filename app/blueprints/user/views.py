@@ -1,8 +1,9 @@
 from flask import render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import current_user, login_required
 from app import db
-from app.models import User, Post
+from app.models import User, Post, Permission
 from app.util import send_email, flash_form_errors
+from app.decorators import permission_required
 from . import user
 from .forms import ChangePasswordForm, ChangeEmailForm, EditInfoForm
 
@@ -15,10 +16,21 @@ def profile(username):
     
     page = request.args.get('page', 1, type=int)
     pagination = user.posts.order_by(Post.timestamp.desc()).paginate(
-        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False
-    )
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
     return render_template('user/profile.html', user=user, posts=posts, pagination=pagination)
+
+
+@user.route('/newsfeed')
+@login_required
+def newsfeed():
+    # uses template from main blueprint
+    page = request.args.get('page', 1, type=int)
+    pagination = current_user.followed_posts.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    posts = pagination.items
+    return render_template('main/posts.html', posts=posts, pagination=pagination, 
+        title='Newsfeed', endpoint='user.newsfeed')
 
 
 @user.route('/edit-account', methods=['GET', 'POST'])
@@ -93,3 +105,57 @@ def change_email(token):
         db.session.commit()
         flash('email has been changed')
     return redirect(url_for('main.index'))
+
+
+@user.route('/follow/<username>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def follow(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        abort(404)
+    current_user.follow(user)
+    db.session.commit()
+    flash(f'you are now following { username }')
+    return redirect(url_for('user.profile', username=username))
+
+
+@user.route('/unfollow/<username>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        abort(404)
+    current_user.unfollow(user)
+    db.session.commit()
+    flash(f'you unfollowed { username }')
+    return redirect(url_for('user.profile', username=username))
+
+
+@user.route('/followers/<username>')
+@login_required
+def followers(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        abort(404)
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followers.paginate(
+        page, per_page=current_app.config['FOLLOWERS_PER_PAGE'], error_out=False)
+    follows = [{'user': item.follower, 'since': item.timestamp} for item in pagination.items]
+    return render_template('user/follows.html', user=user, pagination=pagination, 
+        follows=follows, endpoint='user.followers', title='followers')
+
+
+@user.route('/following/<username>')
+@login_required
+def followed_by(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        abort(404)
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followed.paginate(
+        page, per_page=current_app.config['FOLLOWERS_PER_PAGE'], error_out=False)
+    follows = [{'user': item.followed, 'since': item.timestamp} for item in pagination.items]
+    return render_template('user/follows.html', user=user, pagination=pagination, 
+        follows=follows, endpoint='user.followed_by', title='following')

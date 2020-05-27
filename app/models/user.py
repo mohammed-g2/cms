@@ -6,6 +6,14 @@ from flask import current_app, request
 from flask_login import UserMixin, AnonymousUserMixin
 from app import db, login_manager
 from .role import Role, Permission
+from .post import Post
+
+
+class Follow(db.Model):
+    __tablename__ = 'follow'
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    timestamp = db.Column(db.DateTime(), default=datetime.utcnow)
 
 
 class User(db.Model, UserMixin):
@@ -23,6 +31,18 @@ class User(db.Model, UserMixin):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+
+    followed = db.relationship('Follow',
+        foreign_keys=[Follow.follower_id],
+        backref=db.backref('follower', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan')
+
+    followers = db.relationship('Follow',
+        foreign_keys=[Follow.followed_id],
+        backref=db.backref('followed', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -42,6 +62,11 @@ class User(db.Model, UserMixin):
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password)
+
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id)\
+            .filter(Follow.follower_id == self.id)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -113,6 +138,26 @@ class User(db.Model, UserMixin):
         
         hash = self.avatar_hash or self.gravatar_hash()
         return f'{ url }/{ hash }?s={ size }&d={ default }&r={ rating }'
+
+    def follow(self, user: object):
+        if not self.is_following(user):
+            f = Follow(follower=self, followed=user)
+            db.session.add(f)
+    
+    def unfollow(self, user: object):
+        f = self.followed.filter_by(followed_id=user.id).first()
+        if f:
+            db.session.delete(f)
+    
+    def is_following(self, user: object) -> bool:
+        if user.id is None:
+            return False
+        return self.followed.filter_by(followed_id=user.id).first() is not None
+
+    def is_followed_by(self, user: object) -> bool:
+        if user.id is None:
+            return False
+        return self.followers.filter_by(follower_id=user.id).first() is not None
     
     def __repr__(self):
         return f'<User {self.username}>'

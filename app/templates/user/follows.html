@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% import "partials/macros.html" as macro %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <h1>{{ user.username }}</h1>
+
+    <h2>{{ title }}</h2>
+
+    <div>
+        {% for u in follows %}
+            <div>
+                <img src="{{ u.user.avatar(32) }}" alt="user avatar">
+                <a href="{{ url_for('user.profile', username=u.user.username) }}">
+                    {{ u.user.username }}
+                </a>
+                <p>follow since: <span class="time">{{ u.since }}</span></p>
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        {{ macro.pagination(pagination, endpoint, username=user.username) }}
+    </div>
+{% endblock %}
