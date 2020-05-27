@@ -1,18 +1,23 @@
 # Blogging engine
 
-## Features:
+## Features
 
-    - create and edit blogs
-    - basic user authentication
-    - user profile customization
-    - blog posts / accounts adminstration
+- basic user authentication
+- create and edit blogs
+- followers
+- user profile customization
+- adminstration: edit blogs / accounts
 
+#### command line:
 
-## To Do:
+    - flask test "run unit tests"
+
+## To Do
+
+- better ui
 
 #### Features
 
-- follow
 - like posts
 - user comments
 - (adminstration) delete accounts / posts / comments
@@ -20,7 +25,7 @@
 - api
 - facebook / twitter login
 
-#### Testing 
+#### Testing
 
 - testing: complete models unit tests
 - testing: test coverage
