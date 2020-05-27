@@ -1,6 +1,6 @@
 import os
 from app import create_app, db
-from app.models import User, Role, Permission
+from app.models import User, Role, Permission, Comment, Post
 
 
 app = create_app(os.getenv('APP_CONFIG') or 'default')
@@ -8,7 +8,8 @@ app = create_app(os.getenv('APP_CONFIG') or 'default')
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, User=User, Role=Role, Permission=Permission)
+    return dict(db=db, User=User, Role=Role, Permission=Permission, Post=Post,
+        Comment=Comment)
 
 
 @app.context_processor

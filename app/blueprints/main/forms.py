@@ -17,3 +17,8 @@ class PostForm(FlaskForm):
         if self.post is not None and filed.data != self.post.title:
             if Post.query.filter_by(title=filed.data).first():
                 raise ValidationError('title already used')
+
+
+class CommentForm(FlaskForm):
+    body = TextAreaField('write a comment', validators=[DataRequired()])
+    submit = SubmitField('comment')

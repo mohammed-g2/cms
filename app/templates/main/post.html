@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% import "partials/macros.html" as macro %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -14,4 +15,21 @@
     </p>
     <p class="time">{{ post.timestamp }}</p>
     <p>{{ post.body }}</p>
+
+    <div>
+        {% if current_user.is_authenticated and current_user.can(Permission.COMMENT) %}
+            <form method="POST" action="">
+                {{ form.csrf_token }}
+
+                {{ form.body.label }}
+                {{ form.body }}
+
+                {{ form.submit }}
+            </form>
+        {% endif %}
+
+        {% include "partials/_comments.html" %}
+    </div>
+
+    
 {% endblock %}

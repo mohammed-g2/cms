@@ -6,6 +6,7 @@
 - create and edit blogs
 - followers
 - user profile customization
+- user comments
 - adminstration: edit blogs / accounts
 
 #### command line:
@@ -19,7 +20,6 @@
 #### Features
 
 - like posts
-- user comments
 - (adminstration) delete accounts / posts / comments
 - (adminstration) ban users
 - api
@@ -27,7 +27,7 @@
 
 #### Testing
 
-- testing: complete models unit tests
-- testing: test coverage
-- testing: end to end tests
+- complete models unit tests
+- test coverage
+- end to end tests
 - logging performance / errors

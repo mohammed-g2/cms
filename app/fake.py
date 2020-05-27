@@ -2,7 +2,7 @@ from random import randint
 from sqlalchemy.exc import IntegrityError
 from faker import Faker
 from app import db
-from app.models import User, Post
+from app.models import User, Post, Comment
 
 
 def users(count=100):
@@ -56,3 +56,16 @@ def posts(count=100):
             i += 1
         except IntegrityError:
             db.session.rollback()
+
+
+def comments(per_post=10):
+    fake = Faker()
+    posts = Post.query.all()
+    user_count = User.query.count()
+    for post in posts:
+        for _ in range(per_post):
+            user = User.query.get(randint(1, user_count))
+            comment = Comment(body=fake.text(), post=post, author=user)
+            db.session.add(comment)
+
+    db.session.commit()
