@@ -20,10 +20,9 @@
 
 #### Features
 
+- api (partialy implemented)
 - like posts
-- (adminstration) delete accounts / posts / comments
 - (adminstration) ban users
-- api
 - facebook / twitter login
 
 #### Testing

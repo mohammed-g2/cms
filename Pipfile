@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 faker = "*"
+httpie = "*"
 
 [packages]
 flask = "*"
@@ -15,6 +16,7 @@ flask-sqlalchemy = "*"
 flask-wtf = "*"
 email-validator = "*"
 python-dotenv = "*"
+flask-httpauth = "*"
 
 [requires]
 python_version = "3.8"

@@ -2,7 +2,7 @@ import hashlib
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app, request
+from flask import current_app, request, url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from app import db, login_manager
 from .role import Role, Permission
@@ -159,6 +159,18 @@ class User(db.Model, UserMixin):
         if user.id is None:
             return False
         return self.followers.filter_by(follower_id=user.id).first() is not None
+
+    def to_json(self) -> dict :
+        user = {
+            'url': url_for('api.het_user', id=self.id, _external=True),
+            'username': self.username,
+            'member_since': self.member_since,
+            'last_seen': self.last_seen,
+            'posts_url': url_for('api.get_user_posts', id=self.id, _external=True),
+            'followed_posts_url': url_for('api.get_user_followed_posts', id=self.id, _external=True),
+            'post_count': self.posts.count()
+        }
+        return user
     
     def __repr__(self):
         return f'<User {self.username}>'

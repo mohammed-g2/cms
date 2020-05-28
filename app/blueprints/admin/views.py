@@ -1,5 +1,6 @@
 from flask import render_template, abort, flash, redirect, url_for, request, current_app
 from flask_login import login_required
+from sqlalchemy.sql import func
 from app import db
 from app.decorators import permission_required, admin_required
 from app.models import Permission, User, Comment
@@ -51,6 +52,7 @@ def edit_user(id):
 @permission_required(Permission.MODERATE)
 def moderate():
     page = request.args.get('page', 1, type=int)
+    func.left()
     pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(page=page, 
         per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     comments = pagination.items
