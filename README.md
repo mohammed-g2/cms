@@ -13,6 +13,7 @@
 #### command line:
 
     - flask test "run unit tests"
+    - flask test --coverage "run unit tests with code coverage"
 
 ## To Do
 
