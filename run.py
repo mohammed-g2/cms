@@ -10,6 +10,7 @@ if os.environ.get('COVERAGE'):
 
 import sys
 import click
+from flask_migrate import upgrade
 from app import create_app, db
 from app.models import User, Role, Permission, Comment, Post
 
@@ -76,3 +77,13 @@ def profile(length, log_data):
 
     app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[length], profile_dir=profile_dir)
     app.run(debug=False)
+
+
+@app.cli.command
+def deploy():
+    """run deployment tasks"""
+    # migrate database to the latest version
+    upgrade()
+
+    # create or update user roles
+    Role.insert_roles()
