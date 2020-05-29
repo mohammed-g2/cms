@@ -24,11 +24,6 @@ def make_shell_context():
         Comment=Comment)
 
 
-@app.context_processor
-def make_context():
-    return dict(Permission=Permission)
-
-
 @app.cli.command()
 @click.option('--coverage/--no-coverage', default=False, help='run tests under code coverage')
 def test(coverage):
@@ -37,6 +32,7 @@ def test(coverage):
     # if tests ran with coverage option, recursively restart the script and
     # set COVERAGE environment variable to true
     if coverage and not os.environ.get('COVERAGE'):
+        print('restarting script ...')
         os.environ['COVERAGE'] = '1'
         args = [sys.argv[0] + '.exe'] + sys.argv[1:]
         os.execvp(sys.executable, [sys.executable] + args)

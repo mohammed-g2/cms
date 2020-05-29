@@ -5,11 +5,13 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from config import config
 
+
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
+
 
 def create_app(config_name):
     config_setting = config[config_name]
@@ -34,5 +36,10 @@ def create_app(config_name):
     # api
     from app.api import api
     app.register_blueprint(api, url_prefix='/api/v1')
+
+    @app.context_processor
+    def make_context():
+        from app.models import Permission
+        return dict(Permission=Permission)
 
     return app

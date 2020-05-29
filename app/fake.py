@@ -3,13 +3,14 @@ from sqlalchemy.exc import IntegrityError
 from faker import Faker
 from app import db
 from app.models import User, Post, Comment
+from config import Config
 
 
 def users(count=100):
     """empty tables and create fake data"""
     User.query.delete()
     fake = Faker()
-    admin = User(email='admin@email.com',
+    admin = User(email=Config.ADMIN,
             username='admin',
             password='123456',
             confirmed=True,
