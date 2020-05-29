@@ -45,6 +45,15 @@ class ProductionsConfig(Config):
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
+    @classmethod
+    def init_app(cls, app):
+        """add logging to production configuration"""
+        Config.init_app(app)
+        from app.util import mail_logger, file_logger
+        mail_logger(app)
+        file_logger(app)
+
+
 
 config = {
     'development': DevelopmentConfig,

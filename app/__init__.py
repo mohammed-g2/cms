@@ -44,6 +44,7 @@ def create_app(config_name):
         return dict(Permission=Permission)
 
 
+    # for testing
     @app.route('/shutdown')
     def server_shutdown():
         """shutdown route for testing"""
@@ -53,6 +54,6 @@ def create_app(config_name):
         if not shutdown:
             abort(500)
         shutdown()
-        return 'shuttin down...'
+        return 'shutting down...'
     
     return app

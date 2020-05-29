@@ -21,6 +21,8 @@
     --log-data      "if true, profile data for each request is saved to a file in tmp/profile directory"
     --length        "number of function to include in the report"
 
+    flask deploy    "run deployment tasks"
+
 ## To Do
 
 - better ui
@@ -37,4 +39,3 @@
 - models unit tests
 - Integration tests
 - end to end tests (ui test)
-- logging performance / errors
