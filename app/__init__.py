@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, abort, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -37,9 +37,22 @@ def create_app(config_name):
     from app.api import api
     app.register_blueprint(api, url_prefix='/api/v1')
 
+    # make Permission class available for templates
     @app.context_processor
     def make_context():
         from app.models import Permission
         return dict(Permission=Permission)
 
+
+    @app.route('/shutdown')
+    def server_shutdown():
+        """shutdown route for testing"""
+        if not app.testing:
+            abort(404)
+        shutdown = request.environ.get('werkzeug.server.shutdown')
+        if not shutdown:
+            abort(500)
+        shutdown()
+        return 'shuttin down...'
+    
     return app

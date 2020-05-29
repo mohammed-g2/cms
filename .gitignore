@@ -9,4 +9,5 @@ vendor/
 
 *.sqlite
 .env
+chromedriver.exe
 notes.txt

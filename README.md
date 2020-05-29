@@ -6,7 +6,8 @@
 - create and edit blogs and comments
 - followers
 - user profile customization
-- adminstration: edit / delete blogs, comments, accounts
+- adminstration: edit / delete blogs, comments
+- adminstration: edit accounts
 - moderation: moderate user comments
 
 #### command line:
@@ -22,7 +23,7 @@
 
 - api (partially implemented)
 - like posts
-- (adminstration) ban users
+- (adminstration) ban / delete users
 - facebook / twitter login
 
 #### Testing
