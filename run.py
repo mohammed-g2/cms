@@ -1,6 +1,5 @@
 import os
 
-
 # if COVERAGE is set start test coverage
 COV = None
 if os.environ.get('COVERAGE'):
@@ -16,6 +15,7 @@ from app.models import User, Role, Permission, Comment, Post
 
 
 app = create_app(os.getenv('APP_CONFIG') or 'default')
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 @app.shell_context_processor
@@ -48,8 +48,31 @@ def test(coverage):
         COV.save()
         print('coverage summary:')
         COV.report()
-        basedir = os.path.abspath(os.path.dirname(__file__))
         covdir = os.path.join(basedir, 'tmp/coverage')
         COV.html_report(directory=covdir)
         print(f'HTML version: { covdir }/index.html')
         COV.erase()
+
+
+@app.cli.command()
+@click.option('--length', default=5, help='number of function to include in the profiler report')
+@click.option('--log-data', default='true', help='if true, profile data for each request is saved to a file')
+def profile(length, log_data):
+    """start application under code profiler"""
+    from werkzeug.middleware.profiler import ProfilerMiddleware
+    
+    # make it possible to call app.run() from command line
+    os.environ['FLASK_RUN_FROM_CLI'] = 'false'
+
+    profile_dir = os.path.join(basedir, 'tmp', 'profile')
+
+    if log_data == 'true':
+        try:
+            os.makedirs(profile_dir)
+        except:
+            pass
+    else:
+        profile_dir = None
+
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[length], profile_dir=profile_dir)
+    app.run(debug=False)

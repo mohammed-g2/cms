@@ -12,8 +12,14 @@
 
 #### command line:
 
-    - flask test              "run unit tests"
-    - flask test --coverage   "run unit tests with code coverage"
+    flask test      "run unit tests"
+    options:
+    --coverage      "run unit tests with code coverage"
+
+    flask profile   "start application under code profiler"
+    options:
+    --log-data      "if true, profile data for each request is saved to a file in tmp/profile directory"
+    --length        "number of function to include in the report"
 
 ## To Do
 
@@ -28,7 +34,7 @@
 
 #### Testing
 
-- complete models unit tests
-- complete Integration tests
+- models unit tests
+- Integration tests
 - end to end tests (ui test)
 - logging performance / errors

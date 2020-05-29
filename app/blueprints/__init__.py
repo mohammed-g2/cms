@@ -3,4 +3,4 @@ from .auth import auth
 from .user import user
 from .admin import admin
 
-from . import before_request, errors
+from . import request_hooks, errors
