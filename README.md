@@ -11,21 +11,27 @@
 - moderation: moderate user comments
 
 ## How to run
-- first create virtual environment and install requirements
+first create virtual environment and install requirements
+
     python -m venv venv
     source venv/bin/activate (on windows venv\Scripts\activate)
     pip install -r requirements.txt
-- rename .env-example to .env
-- edit .env file, important configurations (must be set):
+
+rename .env-example to .env
+edit .env file, important configurations (must be set):
+
     FLASK_ENV
     APP_CONFIG
     SECRET_KEY
-- if no database url provided the app will use sqlite
-- run the following commands:
+
+if no database url provided the app will use sqlite, then run the following commands:
+
     flask db migrate
     flask db upgrade
     flask deploy
-- finally
+
+finally
+
     flask run
 
 #### testing

@@ -2,6 +2,9 @@ import os
 import unittest
 import threading
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from app import create_app, db
 from app import fake
 from app.models import User, Role
@@ -18,7 +21,7 @@ class SeleniumTestCase(unittest.TestCase):
 
         options = webdriver.ChromeOptions()
         # headless will not open browser window
-        options.add_argument('headless')
+        # options.add_argument('headless')
         # try to start chrome
         try:
             cls.client = webdriver.Chrome(chrome_options=options)
@@ -76,6 +79,10 @@ class SeleniumTestCase(unittest.TestCase):
         self.client.get('http://localhost:5000/')
         self.assertTrue('Home page' in self.client.page_source)
 
+        # wait for the login link to appear
+        WebDriverWait(self.client, 40).until(
+            EC.presence_of_element_located((By.LINK_TEXT, 'Login')))
+        
         # navigate to login page
         self.client.find_element_by_link_text('Login').click()
         self.assertTrue('<h1>Login</h1>' in self.client.page_source)
@@ -86,6 +93,10 @@ class SeleniumTestCase(unittest.TestCase):
         self.client.find_element_by_name('submit').click()
         self.assertTrue('admin' in self.client.page_source)
 
+        # wait for the dropdown links to appear
+        WebDriverWait(self.client, 40).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'dropdown')))
+        
         # navigate to user profile page
         self.client.find_element_by_class_name('dropdown').click()
         self.client.find_element_by_link_text('Profile').click()
