@@ -1,38 +1,54 @@
 {% macro pagination(pagination, endpoint) %}
-    <div>
-        {# first page #}
-        <a href="{{ url_for(endpoint, page=1, **kwargs) }}">first</a>
-
+{% if pagination.pages > 1 %}
+<nav class="">
+    <ul class="pagination justify-content-center">
         {# previous page #}
         {% if pagination.has_prev %}
-            <a href="{{ url_for(endpoint, page=pagination.page-1, **kwargs) }}">prev</a>
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for(endpoint, page=pagination.page-1, **kwargs) }}">prev</a>
+        </li>
+
         {% else %}
-            <span>prev</span>
+        <li class="page-item disabled">
+            <a class="page-link">prev</a>
+        </li>
+
         {% endif %}
 
         {# list of pages #}
         {% for page in pagination.iter_pages() %}
-            {% if page %}
-                {% if page == pagination.page %}
-                    <a href="{{ url_for(endpoint, page=page, **kwargs) }}" style="color:red">
-                        {{ page }}
-                    </a>
-                {% else %}
-                    <a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a>
-                {% endif %}
-            {% else %}
-                <a>&hellip;</a>
-            {% endif%}
+        {% if page %}
+        {% if page == pagination.page %}
+        <li class="page-item active">
+            <a class="page-link" href="{{ url_for(endpoint, page=page, **kwargs) }}">
+                {{ page }}
+            </a>
+        </li>
+
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a>
+        </li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">&hellip;</a>
+        </li>
+
+        {% endif%}
         {% endfor %}
 
         {# next page #}
         {% if pagination.has_next %}
-            <a href="{{ url_for(endpoint, page=pagination.page+1, **kwargs) }}">next</a>
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for(endpoint, page=pagination.page+1, **kwargs) }}">next</a>
+        </li>
         {% else %}
-            <span>next</span>
+        <li class="page-item disabled">
+            <a class="page-link">next</a>
+        </li>
         {% endif %}
-
-        {# last page #}
-        <a href="{{ url_for(endpoint, page=pagination.pages, **kwargs) }}">last</a>
-    </div>
+    </ul>
+</nav>
+{% endif %}
 {% endmacro %}

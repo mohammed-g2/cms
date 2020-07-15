@@ -3,22 +3,32 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-    <h1>{{ user.username }}</h1>
+<h1>{{ user.username }}</h1>
 
-    <h2>{{ title }}</h2>
+<h5>{{ title }}</h5>
 
-    <div>
+<div>
+    <div class="row row-cols-1 row-cols-md-3">
         {% for u in follows %}
-            <div>
-                <img src="{{ u.user.avatar(32) }}" alt="user avatar">
-                <a href="{{ url_for('user.profile', username=u.user.username) }}">
-                    {{ u.user.username }}
-                </a>
-                <p>follow since: <span class="time">{{ u.since }}</span></p>
+        <div class="col mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ u.user.avatar(32) }}" alt="user avatar">
+                        <span class="d-inline-block ml-2">
+                            <a href="{{ url_for('user.profile', username=u.user.username) }}">
+                                {{ u.user.username }}
+                            </a>
+                            <small class="text-muted d-block">follow since: <span class="time">{{ u.since }}</small>
+                        </span>
+                    </div>
+                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
-    <div>
-        {{ macro.pagination(pagination, endpoint, username=user.username) }}
-    </div>
+</div>
+<div>
+    {{ macro.pagination(pagination, endpoint, username=user.username) }}
+</div>
 {% endblock %}

@@ -3,62 +3,93 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-<div>
-    <h1>{{ user.username }}</h1>
-    <img src="{{ user.avatar(size='256') }}" alt="user avatar">
-    <div>
-        {% if current_user == user %}
-            <a href="{{ url_for('user.edit_account') }}"><button>edit account</button></a>
-        {% endif %}
-        {% if current_user.is_admin() %}
-            <a href="{{ url_for('admin.edit_user', id=user.id) }}"><button>edit account [Admin]</button></a>
-        {% endif %}
-    </div>
-    
-    <p>
-    {% if current_user.can(Permission.FOLLOW) and user != current_user %}
-        {% if not current_user.is_following(user) %}
-            <a href="{{ url_for('user.follow', username=user.username) }}">Follow</a>
-        {% else %}
-            <a href="{{ url_for('user.unfollow', username=user.username) }}">Unfollow</a>
-        {% endif %}
-    {% endif %}
-    </p>
-    
-    <a href="{{ url_for('user.followers', username=user.username) }}">
-        Followers: {{ user.followers.count() }}
-    </a>
-    <br>
-    <a href="{{ url_for('user.followed_by', username=user.username)}}">
-        Following: {{ user.followed.count() }}
-    </a>
+<div class="row mt-5">
+    <!-- begin side controls -->
+    <div class="col-md-4 mb-3">
+        <div class="bg-white">
+            <div class="bg-dark" style="height:10px;"></div>
+            <div class="p-3">
+                <h4>
+                    <img src="{{ user.avatar(size='64') }}" alt="user avatar">
+                    User: {{ user.username }}
+                </h4>
+                <hr>
+                <div>
+                    {% if current_user == user %}
+                    <a href="{{ url_for('user.edit_account') }}" class="btn btn-primary">edit account</a>
+                    {% endif %}
+                    {% if current_user.is_admin() %}
+                    <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="btn btn-danger">edit account
+                        [Admin]</a>
+                    {% endif %}
+                    <div class="mt-3">
+                        <a href="{{ url_for('user.followers', username=user.username) }}">
+                            Followers: {{ user.followers.count() }}
+                        </a>
+                        <br>
+                        <a href="{{ url_for('user.followed_by', username=user.username)}}">
+                            Following: {{ user.followed.count() }}
+                        </a>
 
-    {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
-        <p>Follows you</p>
-    {% endif %}
-    <div>
-        {% if user.name %}<p>{{ user.name }}</p>{% endif %}
-        {% if user.location %}<p>{{ user.location }}</p>{% endif %}
-        {% if current_user.is_admin() %}
-            <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
-        {% endif %}
-        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-        <p>member since <span class="time">{{ user.member_since }}</span></p>
-        <p>last seen <span class="time">{{ user.last_seen }}</span></p>
-    </div>
+                        <div class="mt-3 mb-3">
+                            {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+                            {% if not current_user.is_following(user) %}
+                            <a class="btn btn-primary"
+                                href="{{ url_for('user.follow', username=user.username) }}">Follow</a>
+                            {% else %}
+                            <a class="btn btn-primary"
+                                href="{{ url_for('user.unfollow', username=user.username) }}">Unfollow</a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
 
-    <div>
-        <h3>Posts</h3>
-        {% if posts %}
-            {% include "partials/_posts.html" %}
-        {% else %}
+                        {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
+                        <p><strong>{{ user.username }} Follows you</strong></p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end side controls -->
+    <div class="col-md-8">
+        <!-- begin user info -->
+        <div class="bg-white">
+            <div class="bg-dark" style="height:10px;"></div>
+            <div class="p-3">
+                <h4>User Info</h4>
+                {% if user.name %}<p>name: {{ user.name }}</p>{% endif %}
+                {% if user.location %}<p>location: {{ user.location }}</p>{% endif %}
+                {% if current_user.is_admin() %}
+                <p><a href="mailto:{{ user.email }}">email: {{ user.email }}</a></p>
+                {% endif %}
+                {% if user.about_me %}<p>bio: {{ user.about_me }}</p>{% endif %}
+                <small class="text-muted">
+                    member since <span class="time">{{ user.member_since }}</span>
+                    <br>
+                    last seen <span class="time">{{ user.last_seen }}</span>
+                </small>
+            </div>
+        </div>
+        <!-- end user info -->
+        <hr>
+        <!-- begin posts -->
+        <div class="mt-3">
+            <h3>Posts</h3>
+            {% if posts %}
+            <div class="mt-3">
+                {% include "partials/_posts.html" %}
+            </div>
+
+            {% else %}
             <p>no posts</p>
-        {% endif %}
+            {% endif %}
+        </div>
+        <!-- end posts -->
+        <div>
+            {{ macro.pagination(pagination, 'user.profile', username=user.username) }}
+        </div>
     </div>
 
-    <div>
-        {{ macro.pagination(pagination, 'user.profile', username=user.username) }}
-    </div>
-    
 </div>
 {% endblock %}

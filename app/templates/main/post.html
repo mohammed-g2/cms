@@ -4,36 +4,41 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
+<div class="col-md-8">
     <h1>{{ post.title }}</h1>
-    {% if current_user.is_admin() or current_user == post.author %}
-        <button><a href="{{ url_for('main.edit_post', id=post.id)}}">Edit post</a></button>
-    {% endif %}
-    <p>author: 
+    <p>By:
         <a href="{{ url_for('user.profile', username=post.author.username)}}">
-        {{ post.author.username }}
-        </a>
+            {{ post.author.username }}
+        </a>, 
+        <span class="time text-muted">{{ post.timestamp }}</span>
     </p>
-    <p class="time">{{ post.timestamp }}</p>
+    
+    {% if current_user.is_admin() or current_user == post.author %}
+    <a class="btn btn-primary" href="{{ url_for('main.edit_post', id=post.id)}}">Edit post</a>
+    {% endif %}
+    <hr>
     <p>{{ post.body }}</p>
 
-    <div>
+    <div class="mt-5">
         {% if current_user.is_authenticated and current_user.can(Permission.COMMENT) %}
-            <form method="POST" action="">
-                {{ form.csrf_token }}
+        <form method="POST" action="">
+            {{ form.csrf_token }}
 
-                {{ form.body.label }}
-                {{ form.body }}
+            <div class="form-group">
+                {{ form.body(class="form-control", placeholder="Write a comment...") }}
+            </div>
 
-                {{ form.submit }}
-            </form>
+            {{ form.submit(class="btn btn-outline-dark") }}
+        </form>
         {% endif %}
-
-        {% include "partials/_comments.html" %}
+        <div class="mt-3 mb-3">
+            {% include "partials/_comments.html" %}
+        </div>
 
         {% if comments %}
-            <div>{{ macro.pagination(pagination, endpoint, id=post.id) }}</div>
+        <div>{{ macro.pagination(pagination, endpoint, id=post.id) }}</div>
         {% endif %}
     </div>
 
-    
+</div>
 {% endblock %}

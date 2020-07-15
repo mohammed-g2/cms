@@ -3,10 +3,12 @@
 {% block title %}unconfirmed account{% endblock %}
 
 {% block body %}
-<h1>Hello {{ current_user.username }}</h1>
-<h3>you have not confirmed your account yet</h3>
-<p>
-    need another confirmation email? 
-    <a href="{{ url_for('auth.resend_confirmation')}}">Click here</a>.
-</p>
+<div>
+    <h1>Hello {{ current_user.username }}</h1>
+    <h3>you have not confirmed your account yet</h3>
+    <p>
+        need another confirmation email? 
+        <a href="{{ url_for('auth.resend_confirmation')}}">Click here</a>.
+    </p>
+</div>
 {% endblock %}

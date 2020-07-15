@@ -1,23 +1,34 @@
 {# require posts #}
 <div>
     {% for post in posts %}
-        <div class="post">
-            <h4>{{ post.title }}</h4>
-            <p>{{ post.body }}</p>
-            <p><a class="post-link" href="{{ url_for('main.post', id=post.id)}}">continue reading...</a></p>
-            <p>
-                <a href="{{ url_for('user.profile', username=post.author.username)}}">
-                    <img src="{{ post.author.avatar(26) }}" alt="user avatar">
-                    {{ post.author.username }}
-                </a>
+    <div class="card mt-3 mb-3 bg-white rounded-0">
+        <div class="card-body">
+            <div class="d-flex align-items-center">
+                <img src="{{ post.author.avatar(32) }}" alt="user avatar" class="mr-3">
+                <span class="d-inline-block">
+                    <h6>
+                        <a href="{{ url_for('user.profile', username=post.author.username)}}">{{ post.author.username }}</a>
+                    </h6>
+                    <small class="time text-muted">{{ post.timestamp }}</small>
+                </span>
+                
+            </div>
+            <p class="card-text">
+                <h5><strong>{{ post.title }}</strong></h5>
+                {{ post.body }}...
+                <a class="post-link" href="{{ url_for('main.post', id=post.id)}}"> continue reading</a>
+                
             </p>
-            <p class="time">{{ post.timestamp }}</p>
-            <p>comments {{ post.comments.count() }}</p>
+            
             {% if current_user.id == post.author_id or current_user.is_admin() %}
-            <p>
-                <button><a href="{{ url_for('main.edit_post', id=post.id) }}">Edit</a></button>
-            </p>
+                <a href="{{ url_for('main.edit_post', id=post.id) }}" class="btn btn-primary">Edit</a>
             {% endif %}
         </div>
+
+
+        <small class="text-muted border-top p-2">
+            <span class="text-muted">{{ post.comments.count() }} comments</span>
+        </small>
+    </div>
     {% endfor %}
 </div>

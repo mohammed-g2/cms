@@ -3,34 +3,49 @@
 {% block title %}Edit user - {{ user.username }}{% endblock %}
 
 {% block body %}
-<div>
+<div class="mb-3 col-md-8">
     <h3>Edit user {{ user.username }}</h3>
     <form method="POST" action="">
         {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control") }}
+        </div>
 
-        {{ form.email.label }}
-        {{ form.email }}
+        <div class="form-group">
+            {{ form.username.label }}
+            {{ form.username(class="form-control") }}
+        </div>
 
-        {{ form.username.label }}
-        {{ form.username }}
+        <div class="form-group">
+            {{ form.role.label }}
+            {{ form.role(class="form-control") }}
+        </div>
 
-        {{ form.role.label }}
-        {{ form.role }}
+        <div class="form-group">
+            {{ form.name.label }}
+            {{ form.name(class="form-control") }}
+        </div>
 
-        {{ form.name.label }}
-        {{ form.name }}
+        <div class="form-group">
+            {{ form.location.label }}
+            {{ form.location(class="form-control") }}
+        </div>
 
-        {{ form.location.label }}
-        {{ form.location }}
+        <div class="form-group">
+            <div class="custom-control custom-checkbox mr-sm-2">
+                {{ form.confirmed(class="custom-control-input") }}
+                {{ form.confirmed.label(class="custom-control-label") }}
+            </div>
+        </div>
 
-        {{ form.confirmed.label }}
-        {{ form.confirmed }}
+        <div class="form-group">
+            {{ form.about_me.label }}
+            {{ form.about_me(class="form-control") }}
+        </div>
 
-        {{ form.about_me.label }}
-        {{ form.about_me }}
-
-        {{ form.submit }}
+        {{ form.submit(class="btn btn-outline-dark") }}
     </form>
-    
+
 </div>
 {% endblock %}

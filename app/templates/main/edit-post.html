@@ -3,16 +3,23 @@
 {% block title %}edit post{% endblock %}
 
 {% block body %}
+<div class="col-md-8">
     <h1>Edit post</h1>
     <form method="POST" action="">
         {{ form.csrf_token }}
 
-        {{ form.title.label }}
-        {{ form.title }}
-
-        {{ form.body.label }}
-        {{ form.body }}
+        <div class="form-group">
+            {{ form.title.label }}
+            {{ form.title(class="form-control") }}
+        </div>
         
-        {{ form.submit }}
+        <div class="form-group">
+            {{ form.body.label }}
+            {{ form.body(class="form-control") }}
+        </div>
+        
+        {{ form.submit(class="btn btn-outline-dark") }}
     </form>
+</div>
+    
 {% endblock %}
