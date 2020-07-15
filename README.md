@@ -28,6 +28,9 @@
 - finally
     flask run
 
+#### testing
+make sure to have chrome driver in the top level of the project to run selenium tests
+
 #### command line:
 
     flask test      "run unit tests"

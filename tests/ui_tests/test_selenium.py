@@ -17,7 +17,7 @@ class SeleniumTestCase(unittest.TestCase):
         os.environ['FLASK_RUN_FROM_CLI'] = 'false'
 
         options = webdriver.ChromeOptions()
-        # headless will notopen browser window
+        # headless will not open browser window
         options.add_argument('headless')
         # try to start chrome
         try:
@@ -87,5 +87,6 @@ class SeleniumTestCase(unittest.TestCase):
         self.assertTrue('admin' in self.client.page_source)
 
         # navigate to user profile page
+        self.client.find_element_by_class_name('dropdown').click()
         self.client.find_element_by_link_text('Profile').click()
-        self.assertTrue('<h1>admin</h1>' in self.client.page_source)
+        self.assertTrue('User: admin' in self.client.page_source)
