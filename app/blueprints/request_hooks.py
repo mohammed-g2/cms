@@ -21,11 +21,10 @@ def before_request():
 def after_request(response):
     """log slow database queries during request"""
     for query in get_debug_queries():
-        if query.duration >= current_app.config['SHOW_DB_QUERY_TIME']:
+        if query.duration >= current_app.config['SLOW_DB_QUERY_TIME']:
             current_app.logger.warning(
                 f'Slow query: { query.statement }\n'
                 f'Parameters: { query.parameters }\n'
                 f'Duration: { query.duration }\n'
                 f'Context: { query.context }\n')
-    
     return response

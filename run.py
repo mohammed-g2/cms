@@ -79,11 +79,10 @@ def profile(length, log_data):
     app.run(debug=False)
 
 
-@app.cli.command
+@app.cli.command()
 def deploy():
     """run deployment tasks"""
-    # migrate database to the latest version
+    print('migrate database to the latest version...')
     upgrade()
-
-    # create or update user roles
+    print('create or update user roles...')
     Role.insert_roles()

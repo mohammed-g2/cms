@@ -6,7 +6,7 @@ from app.models import User
 
 class ChangeEmailForm(FlaskForm):
     email = StringField('email', validators=[DataRequired(), Email(), Length(max=64)])
-    submit = SubmitField('change')
+    submit = SubmitField('change email')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
@@ -22,11 +22,11 @@ class ChangePasswordForm(FlaskForm):
             EqualTo('repeat_password', message='unmatched password')
         ])
     repeat_password = PasswordField('repeat password', validators=[DataRequired()])
-    submit = SubmitField('change')
+    submit = SubmitField('change password')
 
 
 class EditInfoForm(FlaskForm):
     name = StringField('name', validators=[Length(max=64, message='name cannot be longer than 64 caracters')])
     location = StringField('location', validators=[Length(max=64, message='location cannot be longer than 64 caracters')])
     about_me = TextAreaField('about me')
-    submit = SubmitField('submit')
+    submit = SubmitField('edit')
