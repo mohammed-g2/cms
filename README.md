@@ -1,4 +1,6 @@
-# Blogging engine
+# Social App
+
+check the project here: https://social-9.herokuapp.com/
 
 ## Features
 
